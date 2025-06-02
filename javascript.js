@@ -1,46 +1,79 @@
 // Constants
-const DEFAULT_PIXEL_SIZE = 64;
+const DEFAULT_PIXEL_SIZE = 16;
 
 
 //Creates divs in a square grid according to grid size
 function createGrid(gridSize){
+    const gridSizePx = 900;
+    const pixelSize = gridSizePx / gridSize;
+
     const gridContainer = document.createElement("div");
-    gridContainer.setAttribute("id", "gridContainer");
-    document.body.appendChild(gridContainer);
+    gridContainer.id = "container";
+    gridContainer.style.display = "flex";
+    gridContainer.style.flexDirection = "column";
+    gridContainer.style.width = `${gridSizePx}px`;
+    gridContainer.style.height = `${gridSizePx}px`;
+    gridContainer.style.border = "1px solid black";
+    gridContainer.style.boxSizing = "border-box";
 
     for (let i = 0; i < gridSize; i++){
         const row = document.createElement("div");
-        row.classList.add("row");
+        row.style.display = "flex";
+        row.style.flex = "1";
 
         for (let j = 0; j < gridSize; j++){
             const pixelDiv = document.createElement("div");
-            pixelDiv.classList.add("pixelDiv");
+            pixelDiv.className = "pixelDiv";
+            pixelDiv.style.width = `${pixelSize}px`
+            pixelDiv.style.height = `${pixelSize}px`
             row.appendChild(pixelDiv);
         }
-        
         gridContainer.appendChild(row);
-        console.log(`created grid row ${i}`);
     }
-    // Creates "drawing" interaction for each "pixel"
-    const pixels = document.querySelectorAll("pixelDiv");
 
-    pixels.forEach(pixel => {
-        pixel.addEventListener("mouseenter", () => {
-            pixel.style.backgroundColor = "red";
-            console.log("changed color")
-        });
-    });
+    document.body.appendChild(gridContainer);
+    addPixelListeners();
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-    createGrid(DEFAULT_PIXEL_SIZE);
-
+function addPixelListeners() {
     const pixels = document.querySelectorAll(".pixelDiv");
     pixels.forEach(pixel => {
         pixel.addEventListener("mouseenter", () => {
             pixel.style.backgroundColor = "red";
         });
     });
+}
+
+function resetContainer () {
+    const oldGrid = document.getElementById("container");
+    if (oldGrid) {
+        oldGrid.remove();
+    }
+}
+
+function createResizeButton() {
+    const resizeButton = document.createElement("button");
+    resizeButton.textContent = "Resize Grid";
+    resizeButton.style.fontWeight = "bold";
+    resizeButton.style.fontSize = "26px";
+    resizeButton.style.width = "280px";
+    resizeButton.style.marginBottom = "24px";
+    resizeButton.style.marginTop = "24px";
+
+    document.body.appendChild(resizeButton)
+
+    resizeButton.addEventListener("click", () => {
+        let newSize = -1;
+        while (newSize > 100 || newSize < 1 || isNaN(newSize)) {
+            newSize = parseInt(prompt("Please enter a new grid size! (1 to 100):"));
+        }
+        resetContainer();
+        createGrid(newSize);
+    });
+}
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    createResizeButton();
+    createGrid(DEFAULT_PIXEL_SIZE);
 });
-
-
