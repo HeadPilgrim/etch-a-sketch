@@ -4,7 +4,11 @@ const DEFAULT_PIXEL_SIZE = 16;
 
 //Creates divs in a square grid according to grid size
 function createGrid(gridSize){
+
+    //Conatiner size on page
     const gridSizePx = 900;
+
+    //Pixel size based on container size
     const pixelSize = gridSizePx / gridSize;
 
     const gridContainer = document.createElement("div");
@@ -16,6 +20,7 @@ function createGrid(gridSize){
     gridContainer.style.border = "1px solid black";
     gridContainer.style.boxSizing = "border-box";
 
+    //Grid creation
     for (let i = 0; i < gridSize; i++){
         const row = document.createElement("div");
         row.style.display = "flex";
@@ -34,7 +39,7 @@ function createGrid(gridSize){
     document.body.appendChild(gridContainer);
     addPixelListeners();
 }
-
+// loops through each pixelDiv and adds the event listener
 function addPixelListeners() {
     const pixels = document.querySelectorAll(".pixelDiv");
     pixels.forEach(pixel => {
@@ -44,12 +49,15 @@ function addPixelListeners() {
     });
 }
 
+
+// removes all content in the gridContainer div
 function resetContainer () {
     const oldGrid = document.getElementById("container");
     if (oldGrid) {
         oldGrid.remove();
     }
 }
+
 
 function createResizeButton() {
     const resizeButton = document.createElement("button");
@@ -72,7 +80,7 @@ function createResizeButton() {
     });
 }
 
-
+//Main function calls on doc load
 document.addEventListener("DOMContentLoaded", () => {
     createResizeButton();
     createGrid(DEFAULT_PIXEL_SIZE);
